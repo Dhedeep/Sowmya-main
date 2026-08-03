@@ -1,0 +1,25 @@
+{
+  "name": "sowmya-selections-e-commerce",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && copy .htaccess dist\\.htaccess && copy 404.html dist\\404.html",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "firebase": "^12.5.0",
+    "firebase-admin": "^13.6.0",
+    "lucide-react": "^0.552.0",
+    "nodemailer": "^7.0.10",
+    "razorpay": "^2.9.6",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-router-dom": "^7.9.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^5.0.0",
+    "vite": "^6.2.0"
+  }
+}

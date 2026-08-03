@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="/images/favicon.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Page Not Found - Sowmya Selections</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700&display=swap"
+    rel="stylesheet">
+  <script>
+    tailwind.config = {
+
+      theme: {
+        extend: {
+          fontFamily: {
+            'poppins': ['Poppins', 'sans-serif'],
+          },
+          colors: {
+            'brand-primary': '#1a1a1a',
+            'brand-secondary': '#f0f0f0',
+            'brand-accent': '#ffc107',
+            gray: {
+              800: '#000000',
+              700: '#333333',
+            },
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+  </style>
+</head>
+
+<body class="bg-white text-black min-h-screen flex items-center justify-center">
+  <div class="text-center p-8 max-w-lg">
+    <h1 class="text-6xl font-bold mb-4">404</h1>
+    <h2 class="text-2xl font-semibold mb-4">Page Not Found</h2>
+    <p class="text-gray-600 mb-8">The page you're looking for doesn't exist or has been moved.</p>
+
+    <div class="mb-8">
+      <p class="text-gray-600 mb-4">You might be looking for one of these pages:</p>
+      <div class="grid grid-cols-2 gap-3 max-w-md mx-auto">
+        <a href="/" class="block px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition-colors">Home</a>
+        <a href="/shop"
+          class="block px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition-colors">Shop</a>
+        <a href="/shop?category=unstitched-suits"
+          class="block px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition-colors">Unstitched
+          Suits</a>
+        <a href="/shop?category=new-arrivals"
+          class="block px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition-colors">New Arrivals</a>
+        <a href="/contact"
+          class="block px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition-colors">Contact</a>
+        <a href="/contact"
+          class="block px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition-colors">Contact</a>
+        <a href="/account-details"
+          class="block px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition-colors">Account</a>
+      </div>
+    </div>
+
+    <a href="/" class="inline-block px-6 py-3 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors">
+      Return to Home
+    </a>
+  </div>
+  <script>
+    // Immediately redirect to the main application
+    // This ensures that React Router can handle the routing
+    window.location.href = '/' + window.location.search + window.location.hash;
+  </script>
+</body>
+
+</html>

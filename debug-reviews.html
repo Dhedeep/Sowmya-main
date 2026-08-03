@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Reviews Debug Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .instructions {
+            background-color: #e7f3ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .code {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #output {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin-top: 20px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .warning {
+            color: #856404;
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Product Reviews Debug Tool</h1>
+        
+        <div class="instructions">
+            <h3>Instructions:</h3>
+            <p>This tool helps debug why reviews are not showing for product ID: <strong>/XsGBWZJexGVCgA457ozA</strong></p>
+            <p>Follow these steps:</p>
+            <ol>
+                <li>Open your browser's developer console (F12)</li>
+                <li>Navigate to the product detail page of the product in question</li>
+                <li>Come back to this tab and click the buttons below</li>
+                <li>Check the console output for detailed information</li>
+            </ol>
+        </div>
+
+        <div class="warning">
+            <strong>Note:</strong> Make sure you're logged into the application before running these checks.
+        </div>
+
+        <h3>Debug Functions:</h3>
+        <button onclick="runDebug()">Debug Product Reviews</button>
+        <button onclick="runFix()">Fix Product Rating</button>
+        <button onclick="clearOutput()">Clear Output</button>
+
+        <div id="output">Output will appear here...</div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
+        import { getFirestore } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
+        import { getStorage } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js';
+        import { getAuth } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
+
+        // Initialize Firebase (you'll need to replace with your actual config)
+        const firebaseConfig = {
+            apiKey: "your-api-key",
+            authDomain: "your-auth-domain",
+            projectId: "your-project-id",
+            storageBucket: "your-storage-bucket",
+            messagingSenderId: "your-sender-id",
+            appId: "your-app-id"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+        const auth = getAuth(app);
+
+        // Make Firebase available globally
+        window.firebaseDB = db;
+        window.firebaseStorage = storage;
+        window.firebaseAuth = auth;
+
+        // Load the debug script
+        fetch('./debug-reviews.js')
+            .then(response => response.text())
+            .then(scriptText => {
+                // Execute the script
+                eval(scriptText);
+                updateOutput('Debug script loaded successfully!');
+            })
+            .catch(error => {
+                updateOutput('Error loading debug script: ' + error.message);
+            });
+
+        function updateOutput(message) {
+            const output = document.getElementById('output');
+            const timestamp = new Date().toLocaleTimeString();
+            output.textContent += `[${timestamp}] ${message}\n`;
+            output.scrollTop = output.scrollHeight;
+        }
+
+        window.runDebug = function() {
+            updateOutput('Running debug for product /XsGBWZJexGVCgA457ozA...');
+            if (window.debugProductReviews) {
+                window.debugProductReviews()
+                    .then(result => {
+                        updateOutput('Debug completed successfully!');
+                        updateOutput(JSON.stringify(result, null, 2));
+                    })
+                    .catch(error => {
+                        updateOutput('Error during debug: ' + error.message);
+                    });
+            } else {
+                updateOutput('Debug function not available. Please wait for the script to load.');
+            }
+        };
+
+        window.runFix = function() {
+            updateOutput('Attempting to fix rating for product /XsGBWZJexGVCgA457ozA...');
+            if (window.fixProductRating) {
+                window.fixProductRating()
+                    .then(result => {
+                        updateOutput('Rating fix completed!');
+                        updateOutput(JSON.stringify(result, null, 2));
+                    })
+                    .catch(error => {
+                        updateOutput('Error during fix: ' + error.message);
+                    });
+            } else {
+                updateOutput('Fix function not available. Please wait for the script to load.');
+            }
+        };
+
+        window.clearOutput = function() {
+            document.getElementById('output').textContent = 'Output cleared...\n';
+        };
+    </script>
+</body>
+</html>
