@@ -25,7 +25,21 @@ export const getUserCart = async (userId) => {
         name: item.name || 'Unknown Product',
         price: parseFloat(item.price) || 0,
         discountedPrice: item.discountedPrice ? parseFloat(item.discountedPrice) : null,
-        image: item.image || item.images?.[0],
+        image:
+  item.image ||
+  (
+    Array.isArray(item.colors) &&
+    Array.isArray(item.images)
+      ? item.images[
+          item.colors.findIndex(
+            color =>
+              String(color).trim().toLowerCase() ===
+              String(item.selectedColor || '').trim().toLowerCase()
+          )
+        ]
+      : null
+  ) ||
+  item.images?.[0],
         quantity: parseInt(item.quantity) || 1,
         selectedSize: item.selectedSize || null,
         selectedColor: item.selectedColor || null,
@@ -135,18 +149,38 @@ export const addToUserCart = async (userId, item) => {
     */
     
     // Update cart items with consistent data structure
-    const normalizedItem = {
-      id: item.id,
-      name: item.name,
-      price: parseFloat(item.price) || 0,
-      discountedPrice: item.discountedPrice ? parseFloat(item.discountedPrice) : null,
-      image: item.image || item.images?.[0],
-      quantity: item.quantity || 1,
-      selectedSize: item.selectedSize || null,
-      selectedColor: item.selectedColor || null,
-      stock: item.stock || 0,
-      sizes: item.sizes || [],
-      colors: item.colors || [],
+    // Find the image that belongs to the selected color
+const selectedColorIndex = Array.isArray(item.colors)
+  ? item.colors.findIndex(
+      color =>
+        String(color).trim().toLowerCase() ===
+        String(item.selectedColor || '').trim().toLowerCase()
+    )
+  : -1;
+
+const selectedColorImage =
+  selectedColorIndex >= 0 && Array.isArray(item.images)
+    ? item.images[selectedColorIndex]
+    : null;
+
+// Use the selected color image first, then existing image, then first image as fallback
+const cartImage =
+  selectedColorImage ||
+  item.image ||
+  item.images?.[0];
+
+const normalizedItem = {
+  id: item.id,
+  name: item.name,
+  price: parseFloat(item.price) || 0,
+  discountedPrice: item.discountedPrice ? parseFloat(item.discountedPrice) : null,
+  image: cartImage,
+  quantity: item.quantity || 1,
+  selectedSize: item.selectedSize || null,
+  selectedColor: item.selectedColor || null,
+  stock: item.stock || 0,
+  sizes: item.sizes || [],
+  colors: item.colors || [],
       // Add pre-order related fields
       isPreOrder,
       expectedShippingDate: product?.expectedShippingDate || null,
