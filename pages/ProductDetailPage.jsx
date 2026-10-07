@@ -418,7 +418,6 @@ const ProductDetailPage = ({ product }) => {
                   </span>
                 </div>
               )}
-
               {/* Pre-Order Period */}
               {(product.preOrderStartDate || product.preOrderEndDate) && (
                 <div className="flex items-center gap-2 mb-2 text-sm">
@@ -515,14 +514,44 @@ const ProductDetailPage = ({ product }) => {
                 {product.colors.map(color => (
                   <button
                     key={color}
-                    onClick={() => setSelectedColor(color)}
+                    onClick={() => {
+  setSelectedColor(color);
+
+  const colorIndex = product.colors.findIndex(
+    c => String(c).trim().toLowerCase() === String(color).trim().toLowerCase()
+  );
+
+  if (colorIndex !== -1 && product.images?.[colorIndex]) {
+    setCurrentImageIndex(colorIndex);
+  }
+}}
                     className={`w-10 h-10 rounded-full border-2 transition-all flex items-center justify-center ${selectedColor === color
                       ? isPreOrder
                         ? 'border-purple-600 scale-110'
                         : 'border-brand-primary scale-110'
                       : 'border-gray-300 dark:border-gray-600'
                       }`}
-                    style={{ backgroundColor: color.toLowerCase().replace(' ', '') }}
+                    style={{
+  backgroundColor:
+    {
+      'peacock blue': '#007C91',
+      'cream': '#F3E7CF',
+      'grey': '#808080',
+      'gray': '#808080',
+      'pink': '#EC4899',
+      'orange': '#F97316',
+      'black': '#000000',
+      'yellow': '#FACC15',
+      'purple': '#800080',
+      'green': '#65A30D',
+      'red': '#EF4444',
+      'white': '#FFFFFF',
+      'blue': '#2563EB',
+      'teal': '#0F9D9A',
+      'maroon': '#800000',
+      'brown': '#8B4513'
+    }[color.toLowerCase().trim()] || color
+}}
                     title={color}
                   >
                     {selectedColor === color && <Check size={16} className={color.toLowerCase() === 'white' ? 'text-black' : 'text-white'} />}
