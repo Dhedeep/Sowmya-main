@@ -164,11 +164,11 @@ const selectedColorImage =
     : null;
 
 // Use the selected color image first, then existing image, then first image as fallback
-const cartImage =
-  selectedColorImage ||
-  item.image ||
-  item.images?.[0];
 
+const cartImage =
+  selectedColorIndex >= 0 && Array.isArray(item.images)
+    ? item.images[selectedColorIndex]
+    : selectedColorImage || item.image || item.images?.[0];
 const normalizedItem = {
   id: item.id,
   name: item.name,
