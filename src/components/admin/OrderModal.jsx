@@ -79,7 +79,7 @@ const OrderModal = ({ isOpen, onClose, order }) => {
   <h1 className="text-2xl font-extrabold tracking-wide">
     SOWMYA SELECTIONS
   </h1>
-</div>
+</div>ord
 
 <hr className="border-t border-gray-300 mb-4" />
 
@@ -143,15 +143,21 @@ const OrderModal = ({ isOpen, onClose, order }) => {
           className="w-14 h-14 object-cover rounded border"
         />
 
-        <div className="flex-1">
-          <p className="text-sm font-medium">
-            {item.name}
-          </p>
+        
+<div className="flex-1">
+  <p className="text-sm font-medium">
+    {item.name}
+  </p>
 
-          <p className="text-sm text-gray-600">
-            Qty : {item.quantity}
-          </p>
-        </div>
+  <p className="text-sm text-gray-600">
+    Colour: {item.selectedColor || item.color || 'Not specified'}
+  </p>
+
+  <p className="text-sm text-gray-600">
+    Qty : {item.quantity}
+  </p>
+</div>
+
       </div>
     ))}
   </div>
