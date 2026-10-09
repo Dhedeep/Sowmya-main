@@ -148,15 +148,9 @@ const OrderModal = ({ isOpen, onClose, order }) => {
   <p className="text-sm font-medium">
     {item.name}
   </p>
-
-  <p className="text-sm text-gray-600">
-   
 <p className="text-sm text-gray-600">
   Colour: {item.color || 'Not specified'}
 </p>
-
-  </p>
-
   <p className="text-sm text-gray-600">
     Qty : {item.quantity}
   </p>
