@@ -150,7 +150,11 @@ const OrderModal = ({ isOpen, onClose, order }) => {
   </p>
 
   <p className="text-sm text-gray-600">
-    Colour: {item.selectedColor || item.color || 'Not specified'}
+   
+<p className="text-sm text-gray-600">
+  Colour: {item.color || 'Not specified'}
+</p>
+
   </p>
 
   <p className="text-sm text-gray-600">
