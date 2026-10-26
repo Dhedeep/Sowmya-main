@@ -1,0 +1,14 @@
+warning: in the working copy of 'src/firebase/services/orderService.js', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/src/firebase/services/orderService.js b/src/firebase/services/orderService.js[m
+[1mindex c65ef7c..ea6526e 100644[m
+[1m--- a/src/firebase/services/orderService.js[m
+[1m+++ b/src/firebase/services/orderService.js[m
+[36m@@ -22,7 +22,7 @@[m [mconst PRODUCTS_COLLECTION = 'products';[m
+ // Create new order[m
+ //[m
+ // IMPORTANT: This must only ever be called AFTER a payment has been confirmed[m
+[31m-// successful (see paymentService.initiatePayment's Razorpay `handler` callback).[m
+[32m+[m[32m// successful (see paymentService.initiatePayment's Razorpay `handler` calback).[m
+ // It performs stock validation, order creation, and stock deduction inside a[m
+ // single Firebase transaction, so:[m
+ //   - Two customers can never both buy the last unit of a product (no race condition).[m

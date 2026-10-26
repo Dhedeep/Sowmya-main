@@ -190,3 +190,257 @@ exports.sendOTPEmail = functions.https.onCall(async (data, context) => {
         throw new functions.https.HttpsError('internal', 'Failed to send email', error.message);
     }
 });
+// Escape HTML to prevent unsafe content in emails
+const escapeHtml = (value) => {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+};
+
+// Format amount in Indian Rupees
+const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR'
+    }).format(Number(amount) || 0);
+};
+// Send professional order confirmation email
+exports.sendOrderConfirmationEmail = functions.firestore
+    .document('orders/{orderId}')
+    .onCreate(async (snap, context) => {
+        const order = snap.data();
+        const orderId = context.params.orderId;
+
+        try {
+            // Read customer email from the order
+            const customerEmail = order.customerEmail;
+            const customerName = order.customerName || 'Customer';
+
+            if (!customerEmail) {
+                console.error(
+                    `Order ${orderId} does not contain a customer email.`
+                );
+
+                return null;
+            }
+
+            // Prepare order items
+            const items = Array.isArray(order.items)
+                ? order.items
+                : [];
+
+            const itemsHtml = items.map((item) => {
+                const itemName = escapeHtml(item.name || 'Product');
+                const quantity = Number(item.quantity) || 1;
+                const price = Number(item.price) || 0;
+                const size = item.size
+                    ? `<br><small>Size: ${escapeHtml(item.size)}</small>`
+                    : '';
+                const color = item.color
+                    ? `<br><small>Color: ${escapeHtml(item.color)}</small>`
+                    : '';
+
+                return `
+                    <tr>
+                        <td style="padding: 12px; border-bottom: 1px solid #eeeeee;">
+                            <strong>${itemName}</strong>
+                            ${size}
+                            ${color}
+                        </td>
+
+                        <td style="padding: 12px; text-align: center; border-bottom: 1px solid #eeeeee;">
+                            ${quantity}
+                        </td>
+
+                        <td style="padding: 12px; text-align: right; border-bottom: 1px solid #eeeeee;">
+                            ${formatCurrency(price * quantity)}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            const totalAmount = formatCurrency(order.total);
+            const safeOrderId = escapeHtml(orderId);
+            const safeCustomerName = escapeHtml(customerName);
+            const paymentId = escapeHtml(order.paymentId || 'N/A');
+
+            
+const mailOptions = {
+    from: '"Sowmya Selections" <info@sowmyaselections.com>',
+    to: customerEmail,
+
+    subject: 'Your Order Has Been Confirmed! 🎉',
+
+    html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Order Confirmation</title>
+        </head>
+
+        <body style="
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #333333;
+        ">
+
+            <div style="
+                max-width: 600px;
+                margin: 30px auto;
+                background-color: #ffffff;
+                border-radius: 10px;
+                overflow: hidden;
+                border: 1px solid #eeeeee;
+            ">
+
+                <!-- Header -->
+                <div style="
+                    background-color: #111111;
+                    padding: 25px 20px;
+                    text-align: center;
+                ">
+                    <h1 style="
+                        margin: 0;
+                        color: #ffffff;
+                        font-size: 24px;
+                    ">
+                        Sowmya Selections
+                    </h1>
+                </div>
+
+                <!-- Content -->
+                <div style="
+                    padding: 30px 25px;
+                    line-height: 1.7;
+                ">
+
+                    <h2 style="
+                        color: #222222;
+                        font-size: 24px;
+                        margin-top: 0;
+                    ">
+                        Your Order Has Been Confirmed! 🎉
+                    </h2>
+
+                    <p>
+                        Dear <strong>${safeCustomerName}</strong>,
+                    </p>
+
+                    <p>
+                        Thank you for shopping with Sowmya Selections.
+                    </p>
+
+                    <p>
+                        We are happy to inform you that your order
+                        <strong>#${safeOrderId}</strong> has been successfully placed.
+                    </p>
+
+                    <!-- Delivery Information -->
+                    <h3 style="
+                        color: #222222;
+                        margin-top: 25px;
+                        margin-bottom: 10px;
+                    ">
+                        Delivery Information
+                    </h3>
+
+                    <p style="margin: 8px 0;">
+                        <strong>DTDC:</strong>
+                        Expected delivery within 3–4 working days.
+                    </p>
+
+                    <p style="margin: 8px 0;">
+                        <strong>Normal Post:</strong>
+                        Delivery may take up to 1 week.
+                    </p>
+
+                    
+<p>
+    Your order is currently being processed.
+    We will share tracking details with you once
+    your order has been dispatched.
+</p>
+
+<!-- Tracking Notification -->
+<div style="
+    background-color: #f8f8f8;
+    border-left: 4px solid #111111;
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 5px;
+">
+    <p style="
+        margin: 0;
+        color: #333333;
+        line-height: 1.6;
+    ">
+        <strong>📱 Tracking Updates:</strong><br>
+        Once your order has been dispatched, tracking details
+        will be sent to the mobile number provided in your
+        delivery address. Please make sure the number is
+        correct and accessible.
+    </p>
+</div>
+
+                    <p>
+                        Thank you for choosing Sowmya Selections! ❤️
+                    </p>
+
+                    <p style="margin-top: 30px;">
+                        Regards,<br>
+                        <strong>Sowmya Selections Team</strong>
+                    </p>
+
+                </div>
+
+                <!-- Footer -->
+                <div style="
+                    background-color: #f5f5f5;
+                    padding: 18px;
+                    text-align: center;
+                    color: #777777;
+                    font-size: 12px;
+                ">
+                    <p style="margin: 0;">
+                        © ${new Date().getFullYear()}
+                        Sowmya Selections. All rights reserved.
+                    </p>
+
+                    <p style="margin: 6px 0 0;">
+                        Contact: info@sowmyaselections.com
+                    </p>
+                </div>
+
+            </div>
+
+        </body>
+        </html>
+    `
+};
+
+            await transporter.sendMail(mailOptions);
+
+            console.log(
+                `Order confirmation email sent successfully to ${customerEmail} for order ${orderId}`
+            );
+
+            return null;
+
+        } catch (error) {
+            console.error(
+                `Failed to send order confirmation email for order ${orderId}:`,
+                error
+            );
+
+            // Do not throw here because the order itself has already been created.
+            // The email trigger can be retried depending on its execution behavior.
+            return null;
+        }
+    });

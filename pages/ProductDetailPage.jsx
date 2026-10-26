@@ -357,7 +357,13 @@ const ProductDetailPage = ({ product }) => {
                 onClick={() => setCurrentImageIndex(index)}
                 className={`w-14 h-14 rounded-lg overflow-hidden border-2 transition-all shadow-sm ${index === currentImageIndex ? 'border-brand-primary ring-2 ring-brand-primary/20' : 'border-gray-200 hover:border-gray-300'}`}
               >
-                <img src={img} alt={`thumbnail ${index + 1}`} className="w-full h-full object-cover" />
+                <img
+  src={img}
+  alt={`thumbnail ${index + 1}`}
+  className="w-full h-full object-cover"
+  loading="lazy"
+  decoding="async"
+/>
               </button>
             ))}
           </div>

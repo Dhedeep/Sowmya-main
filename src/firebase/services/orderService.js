@@ -22,7 +22,7 @@ const PRODUCTS_COLLECTION = 'products';
 // Create new order
 //
 // IMPORTANT: This must only ever be called AFTER a payment has been confirmed
-// successful (see paymentService.initiatePayment's Razorpay `handler` callback).
+// successful (see paymentService.initiatePayment's Razorpay `handler` calback).
 // It performs stock validation, order creation, and stock deduction inside a
 // single Firebase transaction, so:
 //   - Two customers can never both buy the last unit of a product (no race condition).
