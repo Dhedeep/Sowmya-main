@@ -39,6 +39,7 @@ const CollectionSections = () => {
                 >
                   Shop Now
                 </button>
+                
               </div>
             </div>
           </div>
@@ -47,7 +48,7 @@ const CollectionSections = () => {
           <div className="relative group cursor-pointer" onClick={() => handleShopNow()}>
             <div className="overflow-hidden rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800">
               <img
-                src="/images/Kota Doria Sarees.jpg"
+                src="/images/kota-doria-new.jpg"
                 alt="Kota Doria Sarees"
                 className="w-full h-[550px] object-cover transition-transform duration-700 group-hover:scale-110"
               />

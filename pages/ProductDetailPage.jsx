@@ -31,6 +31,9 @@ const ProductDetailPage = ({ product }) => {
   const [preOrderPricing, setPreOrderPricing] = useState(null);
   const [preOrderTermsAccepted, setPreOrderTermsAccepted] = useState(false);
   const [showPreOrderModal, setShowPreOrderModal] = useState(false);
+  const [purchaseOption, setPurchaseOption] = useState('saree');
+const [fabricMeters, setFabricMeters] = useState(1);
+const isPinkMGP = product.name?.trim().toLowerCase() === 'pink mgp';
 
   const isInWishlist = isItemInWishlist(product.id);
 
@@ -402,6 +405,83 @@ const ProductDetailPage = ({ product }) => {
             )}
           </div>
           <p className="text-xs text-green-600 dark:text-green-400 mt-1">Inclusive of all taxes</p>
+
+{/* Pink MGP Blouse Options */}
+{isPinkMGP && (
+  <div className="mt-6 p-4 border rounded-lg space-y-4">
+    <h3 className="font-semibold text-lg">
+      Select Purchase Option
+    </h3>
+
+    <label className="flex items-center justify-between border rounded-lg p-3 cursor-pointer">
+      <span>
+        <input
+          type="radio"
+          name="purchaseOption"
+          checked={purchaseOption === 'saree'}
+          onChange={() => setPurchaseOption('saree')}
+          className="mr-2"
+        />
+        Saree Only
+      </span>
+      <strong>₹2,300</strong>
+    </label>
+
+    <label className="flex items-center justify-between border rounded-lg p-3 cursor-pointer">
+      <span>
+        <input
+          type="radio"
+          name="purchaseOption"
+          checked={purchaseOption === 'combo'}
+          onChange={() => setPurchaseOption('combo')}
+          className="mr-2"
+        />
+        Saree + Penkalamkari Blouse Fabric
+      </span>
+      <strong>₹3,550</strong>
+    </label>
+
+    <label className="flex items-center justify-between border rounded-lg p-3 cursor-pointer">
+      <span>
+        <input
+          type="radio"
+          name="purchaseOption"
+          checked={purchaseOption === 'fabric'}
+          onChange={() => setPurchaseOption('fabric')}
+          className="mr-2"
+        />
+        Penkalamkari Blouse Fabric Only
+      </span>
+    </label>
+
+    {purchaseOption === 'fabric' && (
+      <div>
+        <label className="font-medium">
+          Select metres:
+        </label>
+        <select
+          value={fabricMeters}
+          onChange={(e) => setFabricMeters(Number(e.target.value))}
+          className="ml-3 border rounded p-2"
+        >
+          {Array.from({ length: 10 }, (_, i) => i + 1).map(m => (
+            <option key={m} value={m}>{m} metre{m > 1 ? 's' : ''}</option>
+          ))}
+        </select>
+
+        <p className="mt-2 font-semibold">
+          ₹{1350 * fabricMeters} (Shipping included)
+        </p>
+      </div>
+    )}
+
+    {purchaseOption === 'combo' && (
+      <p className="text-sm text-green-600">
+        Blouse fabric combo offer: ₹1,250 extra. Free shipping.
+      </p>
+    )}
+  </div>
+)}
 
           {/* Pre-Order Information Section */}
           {isPreOrder && (
