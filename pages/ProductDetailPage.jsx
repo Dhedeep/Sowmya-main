@@ -34,6 +34,7 @@ const ProductDetailPage = ({ product }) => {
   const [purchaseOption, setPurchaseOption] = useState('saree');
 const [fabricMeters, setFabricMeters] = useState(1);
 const isPinkMGP = product.name?.trim().toLowerCase() === 'pink mgp';
+const fabricTotal = (1250 * fabricMeters) + 100;
 
   const isInWishlist = isItemInWishlist(product.id);
 
@@ -470,7 +471,7 @@ const isPinkMGP = product.name?.trim().toLowerCase() === 'pink mgp';
         </select>
 
         <p className="mt-2 font-semibold">
-          ₹{1350 * fabricMeters} (Shipping included)
+          ₹{1250 * fabricMeters + 100} (₹100 shipping included)
         </p>
       </div>
     )}
